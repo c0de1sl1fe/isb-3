@@ -1,14 +1,19 @@
-from utils import generateAssymKeys, generateSymmKey, saveSymmKey, loadAndDecryptSymmKey, encryptData
-
+from utils import generateAssymKeys, generateSymmKey, saveSymmKey, loadAndDecryptSymmKey, encryptData, decryptData
+import os
 test = generateSymmKey()
-print(type(test))
 test1 = generateAssymKeys()
 pub = test1.public_key()
 pr = test1
 
-
+print("======================")
 
 encryptData('D:\git\isb-3\data', 'D:\git\isb-3\data\data.txt', test)
+
+
+print('-----------------------------------')
+
+
+decryptData('D:\git\isb-3\data', 'D:\git\isb-3\data\encryptedData.txt', test)
 
 # генерация ключа симметричного алгоритма шифрования
 # import os #можно обойтись стандартным модулем
@@ -30,6 +35,7 @@ encryptData('D:\git\isb-3\data', 'D:\git\isb-3\data\data.txt', test)
 # encryptor = cipher.encryptor()
 # c_text = encryptor.update(padded_text) + encryptor.finalize()
 # print(c_text)
+
 
 
 # decryptor = cipher.decryptor()
