@@ -1,5 +1,5 @@
 from cryptography.hazmat.primitives.asymmetric import rsa
-from cryptography.hazmat.primitives.ciphers.algorithms import SEED, SM4
+# from cryptography.hazmat.primitives.ciphers.algorithms import SEED, SM4
 from cryptography.hazmat.primitives import serialization
 import cryptography
 import os
@@ -18,6 +18,7 @@ from cryptography.hazmat.primitives import padding
 
 
 def generateSymmKey() -> str:
+    # return os.urandom(16)
     return os.urandom(16)
 
 # 1.2
@@ -69,16 +70,20 @@ def loadAndDecryptSymmKey(pathOfKey: str, privateKey):
 
 def encryptData(pathToSave: str, pathOfData: str, key):
     name = os.path.join(pathToSave, 'encryptedData.txt')
-    with open(pathOfData, 'r', encoding= 'utf-8') as data_in, open(name, 'wb') as data_out:
+    with open(pathOfData, 'r', encoding='utf-8') as data_in, open(name, 'wb') as data_out:
         text = data_in.read()
-        padder = padding.PKCS7(128).padder()
+        padder = padding.ANSIX923(32).padder()
         text = bytes(text, 'UTF-8')
         padded_text = padder.update(text)+padder.finalize()
         iv = os.urandom(16)
+        # cipher = Cipher(algorithms.SM4(key), modes.CBC(iv))
+        # encryptor = cipher.encryptor()
+        # c_text = encryptor.update(padded_text) + encryptor.finalize()
         cipher = Cipher(algorithms.SM4(key), modes.CBC(iv))
         encryptor = cipher.encryptor()
         c_text = encryptor.update(padded_text) + encryptor.finalize()
         print(c_text)
+        data_out.write(iv)
         data_out.write(c_text)
     data_in.close
     data_out.close
@@ -86,14 +91,15 @@ def encryptData(pathToSave: str, pathOfData: str, key):
 
 def decryptData(pathToSave: str, pathOfData: str, key):
     name = os.path.join(pathToSave, 'decryptedData.txt')
-    with open(pathOfData, 'rb') as data_in, open(name, 'w', encoding= 'utf-8') as data_out:
+    with open(pathOfData, 'rb') as data_in, open(name, 'w', encoding='utf-8') as data_out:
+        iv = data_in.read(16)
         text = data_in.read()
-        iv = os.urandom(16)
+        # iv = os.urandom(16)
         cipher = Cipher(algorithms.SM4(key), modes.CBC(iv))
         decryptor = cipher.decryptor()
         dc_text = decryptor.update(text) + decryptor.finalize()
-        unpadder = padding.PKCS7(128).unpadder()
+        unpadder = padding.ANSIX923(64).unpadder()
         unpadded_dc_text = unpadder.update(dc_text) + unpadder.finalize()
-        print(unpadded_dc_text.decode('UTF-8'))
+        print(unpadded_dc_text.decode('UTF-8', errors='ignore'))
 
-        data_out.write(unpadded_dc_text.decode('UTF-8'))
+        data_out.write(unpadded_dc_text.decode('UTF-8', errors='ignore'))

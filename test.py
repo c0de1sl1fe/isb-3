@@ -6,7 +6,7 @@ pub = test1.public_key()
 pr = test1
 
 print("======================")
-
+iv = os.urandom(16)
 encryptData('D:\git\isb-3\data', 'D:\git\isb-3\data\data.txt', test)
 
 
