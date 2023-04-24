@@ -1,20 +1,36 @@
-from utils import generateAssymKeys, generateSymmKey, saveSymmKey, loadAndDecryptSymmKey, encryptData, decryptData
-import os
-test = generateSymmKey()
-test1 = generateAssymKeys()
-pub = test1.public_key()
-pr = test1
+# from utils import generateAssymKeys, generateSymmKey, saveSymmKey, loadAndDecryptSymmKey, encryptData, decryptData
+# import os
+# test = generateSymmKey()
+# test1 = generateAssymKeys()
+# pub = test1.public_key()
+# pr = test1
 
-print("======================")
-iv = os.urandom(16)
-encryptData('D:\git\isb-3\data', 'D:\git\isb-3\data\data.txt', test)
-
-
-print('-----------------------------------')
+# print("======================")
+# iv = os.urandom(16)
+# encryptData('D:\git\isb-3\data', 'D:\git\isb-3\data\data.txt', test)
 
 
-decryptData('D:\git\isb-3\data', 'D:\git\isb-3\data\encryptedData.txt', test)
+# print('-----------------------------------')
 
+
+# decryptData('D:\git\isb-3\data', 'D:\git\isb-3\data\encryptedData.txt', test)
+
+
+from utils import generateAssymKeys, generateSymmKey, saveAssymKeys, saveSymmKey, loadAndDecryptSymmKey
+print(1)
+assym = generateAssymKeys()
+print(2)
+symm = generateSymmKey()
+print(3)
+saveSymmKey('D:\git\isb-3\data', assym.public_key(), symm)
+print(4)
+saveAssymKeys('D:\git\isb-3\data', 'D:\git\isb-3\data',
+              assym.public_key(), assym)
+print(5)
+test = loadAndDecryptSymmKey('D:\git\isb-3\data\symm.bin', 'D:\git\isb-3\data\private.pem')
+print('----------------------------')
+print(symm)
+print(test)
 # генерация ключа симметричного алгоритма шифрования
 # import os #можно обойтись стандартным модулем
 
@@ -35,7 +51,6 @@ decryptData('D:\git\isb-3\data', 'D:\git\isb-3\data\encryptedData.txt', test)
 # encryptor = cipher.encryptor()
 # c_text = encryptor.update(padded_text) + encryptor.finalize()
 # print(c_text)
-
 
 
 # decryptor = cipher.decryptor()
