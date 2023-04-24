@@ -47,6 +47,24 @@ class Example(QWidget):
             "privateKey": 0
         }
 
+        # self.pathOfEncryptedSymmKeyToSave = "Empty"
+        # self.pathOfPublicKeyToSave = "Empty"
+        # self.pathOfPrivateKeyToSave = "Empty"
+
+        # self.pathOfDataToGet = "Empty"
+        # self.pathOfPrivateKeyToGet1 = "Empty"
+        # self.pathOfEnctyptedSymmKeyToGet1 = "Empty"
+        # self.pathOfEncryptedDataToSave = "Empty"
+
+        # self.pathOfEncryptedDataToGet = "Empty"
+        # self.pathOfPrivateKeyToGet2 = "Empty"
+        # self.pathOfEnctyptedSymmKeyToGet2 = "Empty"
+        # self.pathOfDataToSave = "Empty"
+
+        # self.symmKey = 0
+        # self.publicKey = 0
+        # self.privateKey = 0
+
         self.setWindowTitle('Lab3')
         self.setWindowIcon(QIcon('6112_Logo_git_prefinal.jpg'))
         layout = QVBoxLayout()
@@ -105,7 +123,7 @@ class Example(QWidget):
         line1 = QHBoxLayout()
         button11 = QPushButton("Path for encrypted key")
         # buttom11.setFixedSize(40,40)
-        line11 = QLabel(self.pathOfEncryptedSymmKeyToSave)
+        line11 = QLabel(self.settings['pathOfEncryptedSymmKeyToSave'])
         line11.setStyleSheet("border: 3px solid red;")
         line1.addWidget(button11)
         line1.addWidget(line11)
@@ -116,7 +134,7 @@ class Example(QWidget):
         line2 = QHBoxLayout()
         button22 = QPushButton("Path for public key")
 
-        line22 = QLabel(self.pathOfPublicKeyToSave)
+        line22 = QLabel(self.settings["pathOfPublicKeyToSave"])
         line22.setStyleSheet("border: 3px solid red;")
         line2.addWidget(button22)
         line2.addWidget(line22)
@@ -126,7 +144,7 @@ class Example(QWidget):
         line3 = QHBoxLayout()
         button33 = QPushButton("Path for private key")
 
-        line33 = QLabel(self.pathOfPrivateKeyToSave)
+        line33 = QLabel(self.settings["pathOfPrivateKeyToSave"])
         line33.setStyleSheet("border: 3px solid red;")
         line3.addWidget(button33)
         line3.addWidget(line33)
@@ -186,7 +204,7 @@ class Example(QWidget):
         line1 = QHBoxLayout()
         button11 = QPushButton("Path of data")
         # buttom11.setFixedSize(40,40)
-        line11 = QLabel(self.pathOfDataToGet)
+        line11 = QLabel(self.settings["pathOfDataToGet"])
         line11.setStyleSheet("border: 3px solid red;")
         line1.addWidget(button11)
         line1.addWidget(line11)
@@ -197,7 +215,7 @@ class Example(QWidget):
         button22 = QPushButton("Path of private key")
         # buttom22.setFixedSize(40,40)
 
-        line22 = QLabel(self.pathOfPrivateKeyToGet1)
+        line22 = QLabel(self.settings["pathOfPrivateKeyToGet1"])
         line22.setStyleSheet("border: 3px solid red")
         line2.addWidget(button22)
         line2.addWidget(line22)
@@ -207,7 +225,7 @@ class Example(QWidget):
         line3 = QHBoxLayout()
         button33 = QPushButton("Path of encrypted key")
         # buttom33.setFixedSize(40,40)
-        line33 = QLabel(self.pathOfEnctyptedSymmKeyToGet1)
+        line33 = QLabel(self.settings["pathOfEnctyptedSymmKeyToGet1"])
         line33.setStyleSheet("border: 3px solid red;")
         line3.addWidget(button33)
         line3.addWidget(line33)
@@ -217,7 +235,7 @@ class Example(QWidget):
         line4 = QHBoxLayout()
         button44 = QPushButton("Path for encrypted data")
         # buttom33.setFixedSize(40,40)
-        line44 = QLabel(self.pathOfEncryptedDataToSave)
+        line44 = QLabel(self.settings["pathOfEncryptedDataToSave"])
         line44.setStyleSheet("border: 3px solid red;")
         line4.addWidget(button44)
         line4.addWidget(line44)
@@ -271,7 +289,7 @@ class Example(QWidget):
         line1 = QHBoxLayout()
         button11 = QPushButton("Path of encrypted data")
         # buttom11.setFixedSize(40,40)
-        line11 = QLabel(self.pathOfEncryptedDataToGet)
+        line11 = QLabel(self.settings["pathOfEncryptedDataToGet"])
         line11.setStyleSheet("border: 3px solid red")
         line1.addWidget(button11)
         line1.addWidget(line11)
@@ -281,7 +299,7 @@ class Example(QWidget):
         line2 = QHBoxLayout()
         button22 = QPushButton("Path of private key")
         # buttom22.setFixedSize(40,40)
-        line22 = QLabel(self.pathOfPrivateKeyToGet2)
+        line22 = QLabel(self.settings["pathOfPrivateKeyToGet2"])
         line22.setStyleSheet("border: 3px solid red;")
         line2.addWidget(button22)
         line2.addWidget(line22)
@@ -291,7 +309,7 @@ class Example(QWidget):
         line3 = QHBoxLayout()
         button33 = QPushButton("Path of encrypted key")
         # buttom33.setFixedSize(40,40)
-        line33 = QLabel(self.pathOfEnctyptedSymmKeyToGet2)
+        line33 = QLabel(self.settings["pathOfEnctyptedSymmKeyToGet2"])
         line33.setStyleSheet("border: 3px solid red;")
         line3.addWidget(button33)
         line3.addWidget(line33)
@@ -301,7 +319,7 @@ class Example(QWidget):
         line4 = QHBoxLayout()
         button44 = QPushButton("Path for decrypted data")
         # buttom33.setFixedSize(40,40)
-        line44 = QLabel(self.pathOfDataToSave)
+        line44 = QLabel(self.settings["pathOfDataToSave"])
         line44.setStyleSheet("border: 3px solid red")
         line4.addWidget(button44)
         line4.addWidget(line44)
@@ -386,7 +404,7 @@ class Example(QWidget):
         self.settings['symmKey'] = generateSymmKey()
         button.setStyleSheet("background-color: green")
 
-        print(self.symmKey)
+        print(self.settings["symmKey"])
 
     def __generateAssymKeys(self, button: QPushButton):
 
