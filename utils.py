@@ -67,7 +67,7 @@ def loadAndDecryptSymmKey(pathOfKey: str, pathOfPrivateKey: str):
 
 
 def encryptData(pathToSave: str, pathOfData: str, key):
-    name = os.path.join(pathToSave, 'encryptedData.txt')
+    name = os.path.join(pathToSave, 'encryptedData.bin')
     with open(pathOfData, 'r', encoding='utf-8') as data_in, open(name, 'wb') as data_out:
         text = data_in.read()
         padder = padding.ANSIX923(128).padder()
