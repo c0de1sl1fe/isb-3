@@ -1,5 +1,5 @@
 from cryptography.hazmat.primitives.asymmetric import rsa
-from cryptography.hazmat.primitives.ciphers.algorithms import SEED, SM4
+
 from cryptography.hazmat.primitives import serialization
 
 from cryptography.hazmat.primitives.asymmetric import padding as padding1
@@ -9,9 +9,6 @@ from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.serialization import load_pem_public_key, load_pem_private_key
-
-
-
 
 
 # 1.1
@@ -48,12 +45,8 @@ def saveAssymKeys(pathOfPublic: str, pathOfPrivate: str, publicKey: rsa.RSAPubli
 
 def saveSymmKey(pathOfKey: str, publicKey: rsa.RSAPublicKey, symmKey: str):
     name = os.path.join(pathOfKey, "symm.bin")
-    # c_text = publicKey.encrypt(bytes(symmKey, 'UTF-8'), padding.OAEP(mgf=padding.MGF1(
-    #     algorithm=hashes.SHA256()), algorithm=hashes.SHA256(), label=None))
-    print(type(symmKey))
     c_text = publicKey.encrypt(symmKey, padding1.OAEP(mgf=padding1.MGF1(
         algorithm=hashes.SHA256()), algorithm=hashes.SHA256(), label=None))
-
     with open(name, 'wb') as symm_out:
         symm_out.write(c_text)
     symm_out.close
@@ -66,9 +59,11 @@ def loadAndDecryptSymmKey(pathOfKey: str, pathOfPrivateKey: str):
     privateKey = 0
     with open(pathOfKey, 'rb') as symm_in, open(pathOfPrivateKey, 'rb') as private_in:
         privateKey = private_in.read()
-        privateKey = load_pem_private_key(privateKey, password= None)
+        privateKey = load_pem_private_key(privateKey, password=None)
         dc_text = symm_in.read()
     return privateKey.decrypt(dc_text, padding1.OAEP(mgf=padding1.MGF1(algorithm=hashes.SHA256()), algorithm=hashes.SHA256(), label=None))
+
+# 2.2
 
 
 def encryptData(pathToSave: str, pathOfData: str, key):
@@ -87,6 +82,8 @@ def encryptData(pathToSave: str, pathOfData: str, key):
         data_out.write(c_text)
     data_in.close
     data_out.close
+
+# 3.2
 
 
 def decryptData(pathToSave: str, pathOfData: str, key):
