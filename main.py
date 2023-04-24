@@ -47,24 +47,6 @@ class Example(QWidget):
             "privateKey": 0
         }
 
-        self.pathOfEncryptedSymmKeyToSave = "Empty"
-        self.pathOfPublicKeyToSave = "Empty"
-        self.pathOfPrivateKeyToSave = "Empty"
-
-        self.pathOfDataToGet = "Empty"
-        self.pathOfPrivateKeyToGet1 = "Empty"
-        self.pathOfEnctyptedSymmKeyToGet1 = "Empty"
-        self.pathOfEncryptedDataToSave = "Empty"
-
-        self.pathOfEncryptedDataToGet = "Empty"
-        self.pathOfPrivateKeyToGet2 = "Empty"
-        self.pathOfEnctyptedSymmKeyToGet2 = "Empty"
-        self.pathOfDataToSave = "Empty"
-
-        self.symmKey = 0
-        self.publicKey = 0
-        self.privateKey = 0
-
         self.setWindowTitle('Lab3')
         self.setWindowIcon(QIcon('6112_Logo_git_prefinal.jpg'))
         layout = QVBoxLayout()
