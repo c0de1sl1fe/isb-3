@@ -1,92 +1,60 @@
 import sys
-import os
 from functools import partial
 
-from PyQt5.QtWidgets import (QSizePolicy, QFrame, QStatusBar, QShortcut, QAction, QWidget, QLabel, QLineEdit, QPushButton,
-                             QTextEdit, QGridLayout, QApplication, QHBoxLayout,
-                             QRadioButton, QFileDialog, qApp, QDesktopWidget, QMessageBox,
-                             QTabWidget, QVBoxLayout, QMainWindow)
-from PyQt5.QtGui import QIcon, QPixmap, QFont, QKeySequence
-from utils import generateAssymKeys, generateSymmKey, saveAssymKeys, saveSymmKey, loadAndDecryptSymmKey, encryptData, decryptData
+from PyQt5.QtWidgets import (QFrame, QShortcut, QWidget, QLabel,  QPushButton,
+                             QApplication, QHBoxLayout,
+                             QFileDialog, qApp, QDesktopWidget, QMessageBox,
+                             QTabWidget, QVBoxLayout)
+from PyQt5.QtGui import QIcon,  QFont, QKeySequence
+
+from utils_sym import generate_symm_key, encrypt_data, decrypt_data
+from utils_assym import generate_assym_keys, save_symm_key, save_assym_keys, load_and_decrypt_symm_key
 
 
-class Example(QWidget):
+class EcryptionSystem(QWidget):
     def __init__(self) -> None:
-        '''Constructor'''
+        """Constructor"""
         super().__init__()
-
         self.initUI()
 
-    # def __iter__(self) -> Self:
-    #     '''something'''
-    #     return self
-
     def initUI(self) -> None:
-        '''support constructor function'''
-
+        """support constructor function"""
         self.shortcut_exit = QShortcut(QKeySequence('esc'), self)
         self.shortcut_exit.activated.connect(qApp.quit)
-
         self.settings = {
             "pathOfEncryptedSymmKeyToSave": "Empty",
             "pathOfPublicKeyToSave": "Empty",
             "pathOfPrivateKeyToSave": "Empty",
-
             "pathOfDataToGet": "Empty",
             "pathOfPrivateKeyToGet1": "Empty",
             "pathOfEnctyptedSymmKeyToGet1": "Empty",
             "pathOfEncryptedDataToSave": "Empty",
-
             "pathOfEncryptedDataToGet": "Empty",
             "pathOfPrivateKeyToGet2": "Empty",
             "pathOfEnctyptedSymmKeyToGet2": "Empty",
             "pathOfDataToSave": "Empty",
-
             "symmKey": 0,
             "publicKey": 0,
             "privateKey": 0
         }
-
-        # self.pathOfEncryptedSymmKeyToSave = "Empty"
-        # self.pathOfPublicKeyToSave = "Empty"
-        # self.pathOfPrivateKeyToSave = "Empty"
-
-        # self.pathOfDataToGet = "Empty"
-        # self.pathOfPrivateKeyToGet1 = "Empty"
-        # self.pathOfEnctyptedSymmKeyToGet1 = "Empty"
-        # self.pathOfEncryptedDataToSave = "Empty"
-
-        # self.pathOfEncryptedDataToGet = "Empty"
-        # self.pathOfPrivateKeyToGet2 = "Empty"
-        # self.pathOfEnctyptedSymmKeyToGet2 = "Empty"
-        # self.pathOfDataToSave = "Empty"
-
-        # self.symmKey = 0
-        # self.publicKey = 0
-        # self.privateKey = 0
-
         self.setWindowTitle('Lab3')
         self.setWindowIcon(QIcon('6112_Logo_git_prefinal.jpg'))
         layout = QVBoxLayout()
         self.setLayout(layout)
         tabs = QTabWidget()
-
-        tabs.addTab(self.__generalTab(), "general")
-        tabs.addTab(self.__generateKeys(), "GenKeys")
-        tabs.addTab(self.__encryptionTab(), "EncryptionTab")
-        tabs.addTab(self.__decryptionTab(), "DecryptionTab")
+        tabs.addTab(self.__general_tab(), "general")
+        tabs.addTab(self.__generate_keys(), "GenKeys")
+        tabs.addTab(self.__encryption_tab(), "EncryptionTab")
+        tabs.addTab(self.__decryption_tab(), "DecryptionTab")
         layout.addWidget(tabs)
-
         self.setGeometry(400, 400, 450, 400)
         qr = self.frameGeometry()
         cp = QDesktopWidget().availableGeometry().center()
         qr.moveCenter(cp)
-
         self.show()
 
-    # Main window with hello-words and descripition what's going on
-    def __generalTab(self) -> QWidget:
-        '''main window with hello-words and descripition what's going on'''
+    def __general_tab(self) -> QWidget:
+        """main window with hello-words and descripition what's going on"""
         custom_font = QFont()
         custom_font.setPixelSize(40)
         generalTab = QWidget()
@@ -103,274 +71,196 @@ class Example(QWidget):
         text.addWidget(line1)
         text.addWidget(line2)
         layout.addLayout(text)
-        # layout.addWidget(self.__mainBtn)
-
         generalTab.setLayout(layout)
         return generalTab
 
-    def __generateKeys(self) -> QWidget:
-
+    def __generate_keys(self) -> QWidget:
+        """create tab with buttons to get pathes and solve creating and saving keys"""
         generalTab = QWidget()
         layout = QVBoxLayout()
         first = QVBoxLayout()
         first.setContentsMargins(10, 10, 10, 200)
         second = QHBoxLayout()
-        separador = QFrame()
-        separador.setFrameShape(QFrame.HLine)
-        separador.setLineWidth(2)
-        # separador.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Expanding)
-
+        separator = QFrame()
+        separator.setFrameShape(QFrame.HLine)
+        separator.setLineWidth(2)
         line1 = QHBoxLayout()
         button11 = QPushButton("Path for encrypted key")
-        # buttom11.setFixedSize(40,40)
         line11 = QLabel(self.settings['pathOfEncryptedSymmKeyToSave'])
         line11.setStyleSheet("border: 3px solid red;")
         line1.addWidget(button11)
         line1.addWidget(line11)
-        # to pass args to function use partial
         button11.clicked.connect(
-            partial(self.__inputPath, self.settings, "pathOfEncryptedSymmKeyToSave", line11))
-
+            partial(self.__input_path, self.settings, "pathOfEncryptedSymmKeyToSave", line11))
         line2 = QHBoxLayout()
         button22 = QPushButton("Path for public key")
-
         line22 = QLabel(self.settings["pathOfPublicKeyToSave"])
         line22.setStyleSheet("border: 3px solid red;")
         line2.addWidget(button22)
         line2.addWidget(line22)
         button22.clicked.connect(
-            partial(self.__inputPath, self.settings, "pathOfPublicKeyToSave", line22))
-
+            partial(self.__input_path, self.settings, "pathOfPublicKeyToSave", line22))
         line3 = QHBoxLayout()
         button33 = QPushButton("Path for private key")
-
         line33 = QLabel(self.settings["pathOfPrivateKeyToSave"])
         line33.setStyleSheet("border: 3px solid red;")
         line3.addWidget(button33)
         line3.addWidget(line33)
         button33.clicked.connect(
-            partial(self.__inputPath, self.settings, "pathOfPrivateKeyToSave", line33))
-
+            partial(self.__input_path, self.settings, "pathOfPrivateKeyToSave", line33))
         first.addLayout(line1)
         first.addLayout(line2)
         first.addLayout(line3)
-
         button1 = QPushButton("gen symm key")
         button1.setStyleSheet("background-color: red")
-        button1.clicked.connect(partial(self.__generateSymmKey, button1))
-
+        button1.clicked.connect(partial(self.__generate_symm_key, button1))
         button2 = QPushButton("gen assymm key")
         button2.setStyleSheet("background-color: red")
-        button2.clicked.connect(partial(self.__generateAssymKeys, button2))
-
-        button3 = QPushButton("save assymm keys")  # make it green
-        button3.clicked.connect(partial(self.__saveAssymKeys, "pathOfPublicKeyToSave",
+        button2.clicked.connect(partial(self.__generate_assym_keys, button2))
+        button3 = QPushButton("save assymm keys")
+        button3.clicked.connect(partial(self.__save_assym_keys, "pathOfPublicKeyToSave",
                                 "pathOfPrivateKeyToSave", "publicKey", "privateKey", self.settings, button3))
 
-        button4 = QPushButton("encrypt and save symm key")  # make it green
-        # button4.clicked.connect(
-        #     partial(self.__onClicked, button4, self.settings))
+        button4 = QPushButton("encrypt and save symm key")
         button4.clicked.connect(partial(
-            self.__saveSymmKey, "pathOfEncryptedSymmKeyToSave", "publicKey", "symmKey", self.settings, button4))
-
+            self.__save_symm_key, "pathOfEncryptedSymmKeyToSave", "publicKey", "symmKey", self.settings, button4))
         button4.clicked.connect(partial(self.__onClicked, button4))
         second.addWidget(button1)
         second.addWidget(button2)
         second.addWidget(button3)
         second.addWidget(button4)
-
-        # layout.addLayout(text)
         layout.addLayout(first)
-        layout.addWidget(separador)
+        layout.addWidget(separator)
         layout.addLayout(second)
-        # layout.addWidget(self.__mainBtn)
-
         generalTab.setLayout(layout)
         return generalTab
 
-    def __encryptionTab(self) -> QWidget:
-
+    def __encryption_tab(self) -> QWidget:
+        """create tab with buttons to get pathes and solve encryption of symm key and encryption of data"""
         generalTab = QWidget()
         layout = QVBoxLayout()
 
         first = QVBoxLayout()
         first.setContentsMargins(10, 10, 10, 200)
         second = QHBoxLayout()
-        separador = QFrame()
-        separador.setFrameShape(QFrame.HLine)
-        separador.setLineWidth(2)
-        # separador.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Expanding)
-
+        separator = QFrame()
+        separator.setFrameShape(QFrame.HLine)
+        separator.setLineWidth(2)
         line1 = QHBoxLayout()
         button11 = QPushButton("Path of data")
-        # buttom11.setFixedSize(40,40)
         line11 = QLabel(self.settings["pathOfDataToGet"])
         line11.setStyleSheet("border: 3px solid red;")
         line1.addWidget(button11)
         line1.addWidget(line11)
         button11.clicked.connect(
-            partial(self.__inputFile, self.settings, "pathOfDataToGet", line11, '.txt'))
-
+            partial(self.__input_file, self.settings, "pathOfDataToGet", line11, '.txt'))
         line2 = QHBoxLayout()
         button22 = QPushButton("Path of private key")
-        # buttom22.setFixedSize(40,40)
-
         line22 = QLabel(self.settings["pathOfPrivateKeyToGet1"])
         line22.setStyleSheet("border: 3px solid red")
         line2.addWidget(button22)
         line2.addWidget(line22)
         button22.clicked.connect(
-            partial(self.__inputFile, self.settings, "pathOfPrivateKeyToGet1", line22, '.pem'))
-
+            partial(self.__input_file, self.settings, "pathOfPrivateKeyToGet1", line22, '.pem'))
         line3 = QHBoxLayout()
         button33 = QPushButton("Path of encrypted key")
-        # buttom33.setFixedSize(40,40)
         line33 = QLabel(self.settings["pathOfEnctyptedSymmKeyToGet1"])
         line33.setStyleSheet("border: 3px solid red;")
         line3.addWidget(button33)
         line3.addWidget(line33)
         button33.clicked.connect(
-            partial(self.__inputFile, self.settings, "pathOfEnctyptedSymmKeyToGet1", line33, '.bin'))
-
+            partial(self.__input_file, self.settings, "pathOfEnctyptedSymmKeyToGet1", line33, '.bin'))
         line4 = QHBoxLayout()
         button44 = QPushButton("Path for encrypted data")
-        # buttom33.setFixedSize(40,40)
         line44 = QLabel(self.settings["pathOfEncryptedDataToSave"])
         line44.setStyleSheet("border: 3px solid red;")
         line4.addWidget(button44)
         line4.addWidget(line44)
         button44.clicked.connect(
-            partial(self.__inputPath, self.settings, "pathOfEncryptedDataToSave", line44))
-
+            partial(self.__input_path, self.settings, "pathOfEncryptedDataToSave", line44))
         first.addLayout(line1)
         first.addLayout(line2)
         first.addLayout(line3)
         first.addLayout(line4)
-        # text = QHBoxLayout()
-        # line1 = QLabel("Hello there!")
-        # buttom = QPushButton("test")
-        # buttom.clicked.connect(self.__onClicked)
-        # buttom.adjustSize()
-        # text.addWidget(buttom)
-        # text.addWidget(line1)
         button1 = QPushButton("decrypt key")
         button1.setStyleSheet("background-color: red")
-        button1.clicked.connect(partial(self.__loadAndDecryptSymmKey,
+        button1.clicked.connect(partial(self.__load_and_decrypt_symmKey,
                                 "pathOfEnctyptedSymmKeyToGet1", "pathOfPrivateKeyToGet1", self.settings, button1))
-        button2 = QPushButton("encrypt data and save")  # make it green
-        button2.clicked.connect(partial(self.__encryptData, "pathOfEncryptedDataToSave",
+        button2 = QPushButton("encrypt data and save")
+        button2.clicked.connect(partial(self.__encrypt_data, "pathOfEncryptedDataToSave",
                                 "pathOfDataToGet", "symmKey", self.settings, button2))
         second.addWidget(button1)
         second.addWidget(button2)
-
-        # layout.addLayout(text)
         layout.addLayout(first)
-        layout.addWidget(separador)
+        layout.addWidget(separator)
         layout.addLayout(second)
-        # layout.addWidget(self.__mainBtn)
-
         generalTab.setLayout(layout)
         return generalTab
-    # image tab where user choose directory and see the img via _next_
 
-    def __decryptionTab(self) -> QWidget:
-
+    def __decryption_tab(self) -> QWidget:
+        """create tab with buttons to get pathes and solve encryption of symm key and decryption of data"""
         generalTab = QWidget()
         layout = QVBoxLayout()
-
         first = QVBoxLayout()
         first.setContentsMargins(10, 10, 10, 200)
         second = QHBoxLayout()
-        separador = QFrame()
-        separador.setFrameShape(QFrame.HLine)
-        separador.setLineWidth(2)
-        # separador.setSizePolicy(QSizePolicy.Minimum, QSizePolicy.Expanding)
-
+        separator = QFrame()
+        separator.setFrameShape(QFrame.HLine)
+        separator.setLineWidth(2)
         line1 = QHBoxLayout()
         button11 = QPushButton("Path of encrypted data")
-        # buttom11.setFixedSize(40,40)
         line11 = QLabel(self.settings["pathOfEncryptedDataToGet"])
         line11.setStyleSheet("border: 3px solid red")
         line1.addWidget(button11)
         line1.addWidget(line11)
         button11.clicked.connect(
-            partial(self.__inputFile, self.settings, "pathOfEncryptedDataToGet", line11, '.bin'))
-
+            partial(self.__input_file, self.settings, "pathOfEncryptedDataToGet", line11, '.bin'))
         line2 = QHBoxLayout()
         button22 = QPushButton("Path of private key")
-        # buttom22.setFixedSize(40,40)
         line22 = QLabel(self.settings["pathOfPrivateKeyToGet2"])
         line22.setStyleSheet("border: 3px solid red;")
         line2.addWidget(button22)
         line2.addWidget(line22)
         button22.clicked.connect(
-            partial(self.__inputFile, self.settings, "pathOfPrivateKeyToGet2", line22, '.pem'))
-
+            partial(self.__input_file, self.settings, "pathOfPrivateKeyToGet2", line22, '.pem'))
         line3 = QHBoxLayout()
         button33 = QPushButton("Path of encrypted key")
-        # buttom33.setFixedSize(40,40)
         line33 = QLabel(self.settings["pathOfEnctyptedSymmKeyToGet2"])
         line33.setStyleSheet("border: 3px solid red;")
         line3.addWidget(button33)
         line3.addWidget(line33)
         button33.clicked.connect(
-            partial(self.__inputFile, self.settings, "pathOfEnctyptedSymmKeyToGet2", line33, '.bin'))
-
+            partial(self.__input_file, self.settings, "pathOfEnctyptedSymmKeyToGet2", line33, '.bin'))
         line4 = QHBoxLayout()
         button44 = QPushButton("Path for decrypted data")
-        # buttom33.setFixedSize(40,40)
         line44 = QLabel(self.settings["pathOfDataToSave"])
         line44.setStyleSheet("border: 3px solid red")
         line4.addWidget(button44)
         line4.addWidget(line44)
         button44.clicked.connect(
-            partial(self.__inputPath, self.settings, "pathOfDataToSave", line44))
-
+            partial(self.__input_path, self.settings, "pathOfDataToSave", line44))
         first.addLayout(line1)
         first.addLayout(line2)
         first.addLayout(line3)
         first.addLayout(line4)
-        # text = QHBoxLayout()
-        # line1 = QLabel("Hello there!")
-        # buttom = QPushButton("test")
-        # buttom.clicked.connect(self.__onClicked)
-        # buttom.adjustSize()
-        # text.addWidget(buttom)
-        # text.addWidget(line1)
         button1 = QPushButton("decrypt key")
         button1.setStyleSheet("background-color: red")
-        button1.clicked.connect(partial(self.__loadAndDecryptSymmKey,
+        button1.clicked.connect(partial(self.__load_and_decrypt_symmKey,
                                 "pathOfEnctyptedSymmKeyToGet2", "pathOfPrivateKeyToGet1", self.settings, button1))
-
-        button2 = QPushButton("decrypt data and save")  # make it green
-        button2.clicked.connect(partial(self.__decryptData, "pathOfDataToSave",
+        button2 = QPushButton("decrypt data and save")
+        button2.clicked.connect(partial(self.__decrypt_data, "pathOfDataToSave",
                                 "pathOfEncryptedDataToGet", "symmKey", self.settings, button2))
 
         second.addWidget(button1)
         second.addWidget(button2)
-
-        # layout.addLayout(text)
         layout.addLayout(first)
-        layout.addWidget(separador)
+        layout.addWidget(separator)
         layout.addLayout(second)
-        # layout.addWidget(self.__mainBtn)
-
         generalTab.setLayout(layout)
         return generalTab
 
-    def __onClicked(self, button: QPushButton, tup: tuple) -> None:
-        '''change class name'''
-        # button.setStyleSheet("background-color: green")
-        print(tup)
-        # print(self.symmKey)
-        # print(self.privateKey)
-        # print(self.publicKey)
-        # print(self.settings['pathOfEncryptedSymmKeyToSave'])
-        # print("test")
-
-    def __inputPath(self, settings: tuple, key: str, lable: QLabel) -> None:
-        '''service function'''
-        print("input path")
+    def __input_path(self, settings: tuple, key: str, lable: QLabel) -> None:
+        """service function"""
         settings[key] = QFileDialog.getExistingDirectory(self, 'Select Folder')
         print(settings[key])
         if not settings[key]:
@@ -383,13 +273,12 @@ class Example(QWidget):
             lable.setStyleSheet("border: 3px solid green;")
             print("ok")
 
-    def __inputFile(self, settings: tuple, key: str,  lable: QLabel, typeCheck: str) -> None:
-        # self.pathOfSymmKey = QFileDialog.getExistingDirectory(self, 'Select Folder')
-        '''service function'''
-        print("input path")
+    def __input_file(self, settings: tuple, key: str,  lable: QLabel, typeCheck: str) -> None:
+        """service function"""
         settings[key] = QFileDialog.getOpenFileName(self, 'Select Folder')[0]
-        print(settings[key])
-        if not typeCheck in settings[key]:
+        if (settings[key] == ''):
+            return
+        if not typeCheck in settings[key] and settings[key] != '':
             print("error")
             QMessageBox.critical(
                 self, "Error", f"select correct file type - {typeCheck}", QMessageBox.Ok)
@@ -398,23 +287,19 @@ class Example(QWidget):
             lable.setStyleSheet("border: 3px solid green;")
             print("ok")
 
-    def __generateSymmKey(self, button: QPushButton):
-
-        # self.symmKey =
-        self.settings['symmKey'] = generateSymmKey()
+    def __generate_symm_key(self, button: QPushButton):
+        """gen and save to settings dictionary symm key"""
+        self.settings['symmKey'] = generate_symm_key()
         button.setStyleSheet("background-color: green")
 
-        print(self.settings["symmKey"])
-
-    def __generateAssymKeys(self, button: QPushButton):
-
-        # self.privateKey = generateAssymKeys()
-        # self.publicKey = self.privateKey.public_key()
-        self.settings['privateKey'] = generateAssymKeys()
+    def __generate_assym_keys(self, button: QPushButton):
+        """gen and save to settings dictionary assym keys"""
+        self.settings['privateKey'] = generate_assym_keys()
         self.settings['publicKey'] = self.settings['privateKey'].public_key()
         button.setStyleSheet("background-color: green")
 
-    def __saveAssymKeys(self, pathOfPublic: str, pathOfPrivate: str, publicKey, privateKey, settings: tuple, button: QPushButton):
+    def __save_assym_keys(self, pathOfPublic: str, pathOfPrivate: str, publicKey, privateKey, settings: tuple, button: QPushButton):
+        """"save to file assymm keys"""
         if settings[pathOfPrivate] == 'Empty' or settings[pathOfPublic] == 'Empty' or not settings[publicKey] or not settings[privateKey]:
             msg = QMessageBox()
             msg.setWindowTitle('error')
@@ -423,8 +308,8 @@ class Example(QWidget):
             button.setStyleSheet("background-color: red")
             return
         try:
-            saveAssymKeys(settings[pathOfPublic],
-                          settings[pathOfPrivate], settings[publicKey], settings[privateKey])
+            save_assym_keys(settings[pathOfPublic],
+                            settings[pathOfPrivate], settings[publicKey], settings[privateKey])
             button.setStyleSheet("background-color: green")
         except:
             msg = QMessageBox()
@@ -433,7 +318,8 @@ class Example(QWidget):
             msg.exec_()
             button.setStyleSheet("background-color: red")
 
-    def __saveSymmKey(self, pathOfKey: str, publicKey: str, symmKey: str, settings: tuple, button: QPushButton):
+    def __save_symm_key(self, pathOfKey: str, publicKey: str, symmKey: str, settings: tuple, button: QPushButton):
+        """ëncrypt and save symm key to file"""
         if settings[pathOfKey] == 'Empty' or not settings[publicKey] or not settings[symmKey]:
             msg = QMessageBox()
             msg.setWindowTitle('error')
@@ -442,8 +328,8 @@ class Example(QWidget):
             button.setStyleSheet("background-color: red")
             return
         try:
-            saveSymmKey(settings[pathOfKey],
-                        settings[publicKey], settings[symmKey])
+            save_symm_key(settings[pathOfKey],
+                          settings[publicKey], settings[symmKey])
             button.setStyleSheet("background-color: green")
         except:
             msg = QMessageBox()
@@ -452,7 +338,8 @@ class Example(QWidget):
             msg.exec_()
             button.setStyleSheet("background-color: red")
 
-    def __loadAndDecryptSymmKey(self, pathOfKey: str, pathOfPrivateKey: str, settings: tuple, button: QPushButton):
+    def __load_and_decrypt_symmKey(self, pathOfKey: str, pathOfPrivateKey: str, settings: tuple, button: QPushButton):
+        """take path of symm encrypted key as .txt file then decrypt with private key and then save to variable settings["symmKey"]"""
         if settings[pathOfKey] == 'Empty' or settings[pathOfPrivateKey] == 'Empty':
             msg = QMessageBox()
             msg.setWindowTitle('error')
@@ -461,7 +348,7 @@ class Example(QWidget):
             button.setStyleSheet("background-color: red")
             return
         try:
-            settings["symmKey"] = loadAndDecryptSymmKey(
+            settings["symmKey"] = load_and_decrypt_symm_key(
                 settings[pathOfKey], settings[pathOfPrivateKey])
             button.setStyleSheet("background-color: green")
         except:
@@ -471,7 +358,8 @@ class Example(QWidget):
             msg.exec_()
             button.setStyleSheet("background-color: red")
 
-    def __encryptData(self, pathToSave: str, pathOfData: str, key, settings: tuple, button: QPushButton):
+    def __encrypt_data(self, pathToSave: str, pathOfData: str, key, settings: tuple, button: QPushButton):
+        """"Encrypt data via path of .txt file to path that resive as pathOfData, and also make button green"""
         if settings[pathToSave] == 'Empty' or settings[pathOfData] == 'Empty' or not settings[key]:
             msg = QMessageBox()
             msg.setWindowTitle('error')
@@ -480,8 +368,8 @@ class Example(QWidget):
             button.setStyleSheet("background-color: red")
             return
         try:
-            encryptData(settings[pathToSave],
-                        settings[pathOfData], settings[key])
+            encrypt_data(settings[pathToSave],
+                         settings[pathOfData], settings[key])
             button.setStyleSheet("background-color: green")
         except:
             msg = QMessageBox()
@@ -490,7 +378,8 @@ class Example(QWidget):
             msg.exec_()
             button.setStyleSheet("background-color: red")
 
-    def __decryptData(self, pathToSave: str, pathOfData: str, key, settings: tuple, button: QPushButton):
+    def __decrypt_data(self, pathToSave: str, pathOfData: str, key, settings: tuple, button: QPushButton):
+        """"Decrypt data via path of .txt file to path that resive as pathOfData, and also make button green"""
         if settings[pathToSave] == 'Empty' or settings[pathOfData] == 'Empty' or not settings[key]:
             msg = QMessageBox()
             msg.setWindowTitle('error')
@@ -499,8 +388,8 @@ class Example(QWidget):
             button.setStyleSheet("background-color: red")
             return
         try:
-            decryptData(settings[pathToSave],
-                        settings[pathOfData], settings[key])
+            decrypt_data(settings[pathToSave],
+                         settings[pathOfData], settings[key])
             button.setStyleSheet("background-color: green")
         except:
             msg = QMessageBox()
@@ -512,5 +401,5 @@ class Example(QWidget):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    ex = Example()
+    ex = EcryptionSystem()
     sys.exit(app.exec_())
