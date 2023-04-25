@@ -124,7 +124,6 @@ class EcryptionSystem(QWidget):
         button4 = QPushButton("encrypt and save symm key")
         button4.clicked.connect(partial(
             self.__save_symm_key, "pathOfEncryptedSymmKeyToSave", "publicKey", "symmKey", self.settings, button4))
-        button4.clicked.connect(partial(self.__onClicked, button4))
         second.addWidget(button1)
         second.addWidget(button2)
         second.addWidget(button3)
