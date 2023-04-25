@@ -262,16 +262,13 @@ class EcryptionSystem(QWidget):
     def __input_path(self, settings: tuple, key: str, lable: QLabel) -> None:
         """service function"""
         settings[key] = QFileDialog.getExistingDirectory(self, 'Select Folder')
-        print(settings[key])
         if not settings[key]:
-            print("error")
             QMessageBox.critical(
                 self, "Error", "please select dir", QMessageBox.Ok)
 
         else:
             lable.setText(settings[key])
             lable.setStyleSheet("border: 3px solid green;")
-            print("ok")
 
     def __input_file(self, settings: tuple, key: str,  lable: QLabel, typeCheck: str) -> None:
         """service function"""
@@ -279,13 +276,11 @@ class EcryptionSystem(QWidget):
         if (settings[key] == ''):
             return
         if not typeCheck in settings[key] and settings[key] != '':
-            print("error")
             QMessageBox.critical(
                 self, "Error", f"select correct file type - {typeCheck}", QMessageBox.Ok)
         else:
             lable.setText(settings[key])
             lable.setStyleSheet("border: 3px solid green;")
-            print("ok")
 
     def __generate_symm_key(self, button: QPushButton):
         """gen and save to settings dictionary symm key"""

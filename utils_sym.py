@@ -23,7 +23,6 @@ def encrypt_data(pathToSave: str, pathOfData: str, key) -> None:
             cipher = Cipher(algorithms.SM4(key), modes.CBC(iv))
             encryptor = cipher.encryptor()
             c_text = encryptor.update(padded_text) + encryptor.finalize()
-            print(c_text)
             data_out.write(iv)
             data_out.write(c_text)
         data_in.close
@@ -46,7 +45,6 @@ def decrypt_data(pathToSave: str, pathOfData: str, key) -> None:
             dc_text = decryptor.update(text) + decryptor.finalize()
             unpadder = padding.ANSIX923(128).unpadder()
             unpadded_dc_text = unpadder.update(dc_text) + unpadder.finalize()
-            print(unpadded_dc_text.decode('UTF-8', errors='ignore'))
             data_out.write(unpadded_dc_text.decode('UTF-8', errors='ignore'))
     except Exception as e:
         logging.error(str(e))
