@@ -21,7 +21,6 @@ def save_symm_key(pathOfKey: str, publicKey: rsa.RSAPublicKey, symmKey: str) -> 
     try:
         with open(name, 'wb') as symm_out:
             symm_out.write(c_text)
-        symm_out.close
     except Exception as e:
         logging.error(f"something went wrong with {name} and {str(e)}")
         raise Exception("saving file error")
