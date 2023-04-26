@@ -17,7 +17,7 @@ class EcryptionSystem(QWidget):
         super().__init__()
         self.initUI()
 
-    def initUI(self) -> None:
+    def init_UI(self) -> None:
         """support constructor function"""
         self.shortcut_exit = QShortcut(QKeySequence('esc'), self)
         self.shortcut_exit.activated.connect(qApp.quit)

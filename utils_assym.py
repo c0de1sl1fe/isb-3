@@ -34,7 +34,6 @@ def save_assym_keys(pathOfPublic: str, pathOfPrivate: str, publicKey: rsa.RSAPub
         with open(public_pem, 'wb') as public_out:
             public_out.write(publicKey.public_bytes(encoding=serialization.Encoding.PEM,
                                                     format=serialization.PublicFormat.SubjectPublicKeyInfo))
-        public_out.close
     except Exception as e:
         logging.error(f"something went wrong with {public_pem} and {str(e)}")
         raise Exception("saving file error")
@@ -44,7 +43,6 @@ def save_assym_keys(pathOfPublic: str, pathOfPrivate: str, publicKey: rsa.RSAPub
             private_out.write(privateKey.private_bytes(encoding=serialization.Encoding.PEM,
                                                        format=serialization.PrivateFormat.TraditionalOpenSSL,
                                                        encryption_algorithm=serialization.NoEncryption()))
-        private_out.close
     except:
         logging.error(f"something went wrong with {public_pem} and {str(e)}")
         raise Exception("saving file error")
