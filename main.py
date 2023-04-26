@@ -15,7 +15,7 @@ class EcryptionSystem(QWidget):
     def __init__(self) -> None:
         """Constructor"""
         super().__init__()
-        self.initUI()
+        self.init_UI()
 
     def init_UI(self) -> None:
         """support constructor function"""
